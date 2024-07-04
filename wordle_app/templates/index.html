@@ -1,0 +1,802 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>🎮Wordle Game🎮</title>
+    {% load static %}
+    <link rel="stylesheet" type="text/css" href="{% static 'css/your_stylesheet.css' %}">
+    
+    <style>
+        .main-container {
+        margin-top: -200px; /* Adjust the value as needed */
+        padding-top: 0; /* Ensure there is no padding at the top */
+    }
+        body {
+            font-family: 'Changa', sans-serif;
+            text-align: center;
+            background-color: #F0F0F0;
+            padding-top: 0px;
+            /* 줄인 값 */
+        }
+
+        h1 {
+            font-size: 50px;
+            color: #111;
+            font-family: 'Changa', sans-serif;
+            font-weight: 500;
+        }
+
+        form {
+            margin-top: 20px;
+        }
+
+        input[type="text"] {
+            padding: 10px;
+            font-size: 20px;
+            width: 150px;
+            text-align: center;
+            border: 2px solid;
+            border-radius: 10px;
+            outline: none;
+        }
+
+        button[type="submit"] {
+            padding: 10px 20px;
+            font-size: 16px;
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            border-radius: 10px;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+
+        button[type="submit"]:hover {
+            background-color: #45A049;
+        }
+
+        button[type="start"] {
+            padding: 7px 14px;
+            font-size: 16px;
+            background-color: #F52D0A;
+            color: white;
+            border: none;
+            border-radius: 10px;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+        button[type="run"] {
+            padding: 7px 14px;
+            font-size: 16px;
+            background-color: #1e8310ea;
+            color: white;
+            border: none;
+            border-radius: 10px;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+        button[type="fly"] {
+            padding: 7px 14px;
+            font-size: 16px;
+            background-color: #942FA1;
+            color: white;
+            border: none;
+            border-radius: 10px;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+        button[type="walk"] {
+            padding: 7px 14px;
+            font-size: 16px;
+            background-color: #eb9a05ea;
+            color: white;
+            border: none;
+            border-radius: 10px;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+        button[type="jump"] {
+            padding: 7px 14px;
+            font-size: 16px;
+            background-color: #0566F8;
+            color: white;
+            border: none;
+            border-radius: 10px;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+        button[type="master"] {
+            padding: 7px 14px;
+            font-size: 16px;
+            background-color: #614209;
+            color: white;
+            border: none;
+            border-radius: 10px;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+
+        .list-container {
+            position: relative;
+            top: 320px;
+            /* 줄인 값 */
+            left: 585px;
+            display: inline-block;
+            margin-top: 30px;
+            flex-direction: column;
+            align-items: flex-start;
+        }
+
+        .list-container button,
+        .list-container form {
+            margin-bottom: 10px;
+            /* 버튼 간의 간격 */
+            width: 120%;
+            display: block;
+            /* 버튼을 부모 요소의 너비로 설정 (선택 사항) */
+        }
+
+        .list-container form button {
+            width: 100%;
+            /* 폼 버튼의 너비도 동일하게 설정 */
+        }
+
+        .new-container {
+            position: relative;
+            top: 20px;
+            /* 줄인 값 */
+            right: 300px;
+            display: inline-block;
+            margin-top: 30px;
+            /* 줄인 값 */
+        }
+
+        .level-container p {
+            font-size: 16px;
+            border: 2px solid black;
+            padding: 10px;
+            background-color: rgb(8, 8, 8);
+            color: rgb(255, 255, 255);
+            padding: 3px 14px;
+            border-radius: 5px;
+            text-align: center;
+        }
+
+        .level-container {
+            position: relative;
+            top: 20px;
+            /* 줄인 값 */
+            left: 330px;
+            display: inline-block;
+            margin-top: 30px;
+            /* 줄인 값 */
+        }
+
+        ul {
+            list-style-type: none;
+            padding: 0;
+        }
+
+        li {
+            display: block;
+            margin: 5px;
+            font-size: 20px;
+        }
+
+        .response {
+            margin-top: 20px;
+            font-size: 18px;
+        }
+
+        .history {
+            margin-top: 20px;
+            margin-bottom: 20px;
+        }
+
+        .keypad {
+            margin-top: 20px;
+        }
+
+        .keypad-row {
+            margin-bottom: 10px;
+        }
+
+        .keypad-row button {
+            padding: 10px 15px;
+            font-size: 18px;
+            margin: 5px;
+            border: 2px solid #ccc;
+            border-radius: 10px;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+
+        .keypad-row button:hover {
+            background-color: #45A049;
+        }
+
+        .letter-box {
+            display: inline-block;
+            width: 40px;
+            height: 40px;
+            line-height: 40px;
+            margin: 5px;
+            font-size: 24px;
+            color: white;
+            text-align: center;
+            border-radius: 5px;
+        }
+
+        .green {
+            background-color: #4CAF50;
+        }
+
+        .yellow {
+            background-color: #FFC107;
+        }
+
+        .black {
+            background-color: #0C0C0C;
+        }
+
+        .keypad-row button.green {
+            background-color: #4CAF50;
+            color: white;
+        }
+
+        .keypad-row button.yellow {
+            background-color: #FFC107;
+            color: black;
+        }
+
+        .keypad-row button.black {
+            background-color: #0C0C0C;
+            color: white;
+        }
+
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 9999;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.4);
+            overflow: auto;
+        }
+
+        .modal-content {
+            background-color: #FEFEFE;
+            margin: 10% auto;
+            padding: 15px;
+            border: 7px solid #B80B0B;
+            width: 80%;
+            max-width: 600px;
+            border-radius: 30px;
+            font-size: 20px;
+            font-family: 'Gill Sans';
+        }
+
+        #rule-button {
+            margin-top: 10px;
+        }
+
+        .close {
+            color: #aaa;
+            float: right;
+            font-size: 28px;
+            font-weight: bold;
+        }
+
+        .close:hover,
+        .close:focus {
+            color: black;
+            text-decoration: none;
+            cursor: pointer;
+        }
+
+        .content-container {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .history {
+            margin-left: 20px;
+        }
+
+        .character-container {
+            position: relative;
+            display: inline-block;
+            top: 30px;
+        }
+
+        .character {
+            width: auto;
+            height: 200px;
+        }
+
+        .speech-bubble {
+            position: absolute;
+            top: 60px;
+            left: -200px;
+            width: 240px;
+            padding: 10px;
+            background: #fff;
+            border: 2px solid #000;
+            border-radius: 5px;
+            font-size: 16px;
+            text-align: center;
+            box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
+        }
+
+        .speech-bubble::after {
+            content: '';
+            position: absolute;
+            top: 50%;
+            right: -20px;
+            transform: translateY(-50%);
+            width: 0;
+            height: 0;
+            border: 10px solid transparent;
+            border-left-color: #fff;
+            border-right: 0;
+            border-top: 0;
+            margin-top: -10px;
+        }
+
+        .banner-container {
+            display: flex;
+            justify-content: center;
+            margin-top: 20px;
+        }
+
+        .banner-container a {
+            margin: 0 10px;
+        }
+
+        .banner-container img {
+            width: 200px;
+            height: auto;
+            border-radius: 5px;
+            transition: transform 0.3s ease;
+        }
+
+        .banner-container img:hover {
+            transform: scale(1.05);
+        }
+
+        .modal-content p {
+            font-size: 15px;
+        }
+
+        @media screen and (max-width: 768px) {
+            body {
+                padding-top: 20px;
+            }
+
+            .main-container {
+                margin-top: 0;
+                padding-top: 20px;
+                flex-direction: column;
+                align-items: center;
+            }
+
+            h1 {
+                font-size: 28px;
+            }
+
+            input[type="text"] {
+                font-size: 16px;
+                width: 100px;
+            }
+
+            button[type="submit"],
+            button[type="start"],
+            button[type="run"],
+            button[type="fly"],
+            button[type="walk"],
+            button[type="jump"],
+            button[type="master"] {
+                padding: 5px 10px;
+                font-size: 12px;
+                width: auto;
+                margin: 3px;
+            }
+
+            .new-container {
+                top: 0;
+                right: 0;
+                display: flex;
+                justify-content: center;
+                width: 100%;
+                margin-top: 10px;
+            }
+
+            .level-container {
+                top: 0;
+                left: 0;
+                display: flex;
+                justify-content: center;
+                width: 100%;
+                margin-top: 10px;
+                order: 1; /* 맨 아래로 배치 */
+            }
+
+            .content-container {
+                display: flex;
+                flex-direction: column;
+                align-items: center;
+            }
+
+            .character-container {
+                order: 1; /* 캐릭터 컨테이너의 순서 */
+                position: relative; /* relative로 변경 */
+            }
+
+            .history {
+                order: 2; /* 히스토리 컨테이너의 순서 */
+                margin-top: 40px;
+                width: 100%;
+                display: flex;
+                justify-content: center;
+            }
+
+            .list-container {
+                order: 3; /* 리스트 컨테이너의 순서 */
+                top: 0;
+                left: 0;
+                display: flex;
+                flex-direction: row;
+                justify-content: center;
+                align-items: center;
+                width: 100%;
+                margin-top: 10px;
+                flex-wrap: wrap;
+            }
+
+            .list-container button {
+                flex: 1 1 30%; /* 버튼 크기 조정 */
+                margin: 5px; /* 버튼 간격 조정 */
+                max-width: 30%; /* 최대 너비 설정 */
+            }
+
+            .new-container {
+                order: 4; /* 새 게임 컨테이너의 순서 */
+                display: flex;
+                justify-content: center;
+                width: 100%;
+                margin-top: 10px;
+            }
+
+            .speech-bubble {
+                position: relative; /* relative로 변경 */
+                top: -20px; /* 캐릭터 이미지 아래로 이동, 필요에 따라 조정 */
+                left: 50%;
+                transform: translateX(-50%);
+                width: 240px;
+                padding: 10px;
+                background: #fff;
+                border: 2px solid #000;
+                border-radius: 5px;
+                font-size: 16px;
+                text-align: center;
+                box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
+            }
+
+            .speech-bubble::after {
+                content: '';
+                position: absolute;
+                top: -10px; /* 화살표의 위치를 아래로 조정 */
+                left: 50%;
+                transform: translateX(-50%);
+                width: 0;
+                height: 0;
+                border: 10px solid transparent;
+                border-top-color: #fff; /* 화살표를 아래로 향하게 */
+                border-bottom: 0;
+                border-right: 0;
+                margin-left: -10px;
+            }
+
+            .keypad {
+                display: none; /* 모바일에서는 키패드를 숨깁니다 */
+            }
+
+            .keypad-row button {
+                padding: 6px 8px;
+                font-size: 12px;
+                margin: 2px;
+            }
+
+            .letter-box {
+                width: 25px;
+                height: 25px;
+                line-height: 25px;
+                font-size: 16px;
+            }
+
+            .banner-container img {
+                width: 120px;
+            }
+
+            .modal-content {
+                width: 90%;
+            }
+        }
+
+
+
+    </style>
+    <link href="https://fonts.googleapis.com/css2?family=Changa:wght@400&display=swap" rel="stylesheet">
+
+<body>
+    <div class="main-container">
+    {% load static %}
+    <div class="list-container">
+        <!-- 단어 목록을 바꿀 수 있는 버튼 -->
+        <button id="btn-start" type="start" onclick="changeWordlist('Start')">1단계 Start</button>
+        <button id="btn-walk" type="walk" onclick="changeWordlist('Walk')">2단계 Walk</button>
+        <button id="btn-run" type="run" onclick="changeWordlist('Run')">3단계 Run</button>
+        <button id="btn-jump" type="jump" onclick="changeWordlist('Jump')">4단계 Jump</button>
+        <button id="btn-fly" type="fly" onclick="changeWordlist('Fly')">5단계 Fly</button>
+        <button id="btn-master" type="master" onclick="changeWordlist('Master')">6단계 Master</button>
+    </div>
+    <div class="new-container">
+    <!-- 새 게임 시작 버튼 -->
+    <form method="get" action="">
+        <button class="new-game-btn" type="submit" name="new_game" value="1">New Game</button>
+    </form>
+    </div>
+    <div class="level-container">
+        <!-- 현재 학습하고 있는 단어 목록 단계 보여주기 -->
+        <p>{{current_wordlist}} 단계 학습 중</p>
+    </div>
+    <!-- 메인 제목 & 규칙을 설명해주는 팝업 -->
+    <h1>🎮Wordle Game🎮<button id="rule-button" onclick="toggleModal()">Rule</button>
+        <div id="myModal" class="modal">
+            <div class="modal-content">
+                <span class="close" onclick="toggleModal()">&times;</span>
+                <p>
+                    ➀ 10번의 시도 안에 오늘의 워들을 알아내세요.<br>
+                    ➁ 각각의 시도는 5글자의 영어 단어로 이루어 집니다.<br>
+                    ➂ 추측이 맞는지 확인하려면 Submit 버튼을 누르세요.<br>
+                    ➃ 추측한 단어가 얼마나 답에 근접했는지는 이후 각 타일의 색으로 표시됩니다.<br><br>
+                    💡 알파벳은 중복 사용 가능합니다 ! 💡<br>
+                    <br>
+                    🟩 : 위치와 알파벳 모두 맞음<br>
+                    🟨 : 알파벳 맞음<br>
+                    ⬛ : 위치와 알파벳 모두 틀림
+                </p>
+            </div>
+        </div>
+    </h1>
+    <form method="post" action="">
+        {% csrf_token %}
+        <input type="hidden" name="current_wordlist" value="{{ current_wordlist }}">
+        <!-- 단어 입력 받는 곳 -->
+        <input type="text" name="input_text" maxlength="5" placeholder="Enter your guess" required>
+        <!-- 단어를 입력하고 제출하는 버튼 -->
+        <button type="submit">Submit</button>
+    </form>
+    <p id="warning-message" style="color: red; display: none;">영어 단어를 입력하세요.</p>
+
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            const inputField = document.getElementsByName("input_text")[0];
+            const warningMessage = document.getElementById("warning-message");
+
+            inputField.addEventListener("input", function () {
+                if (/[\u3131-\u3163\uac00-\ud7a3]+/.test(inputField.value)) {
+                    inputField.value = inputField.value.replace(/[\u3131-\u3163\uac00-\ud7a3]+/g, '');
+                    warningMessage.style.display = 'block';
+                } else {
+                    warningMessage.style.display = 'none';
+                }
+            });
+        });
+    </script>
+
+    <!-- 캐릭터와 추측 단어 기록을 포함하는 컨테이너 -->
+    <div class="content-container">
+        <div class="character-container">
+            <!-- 캐릭터 이미지 -->
+            <img src="{% static 'my_app/images/character.png' %}" alt="Character" class="character">
+            <!-- 응답 텍스트가 있는 경우 표시 -->
+            {% if response_text %}
+            <div class="speech-bubble">{{ response_text|safe }}</div>
+            {% endif %}
+        </div>
+        <!-- 추측 단어 기록 -->
+        {% if history %}
+        <div class="history">
+            <h3>Guess History</h3>
+            <ul>
+                {% for entry in history %}
+                <li>
+                    <!-- 각 글자와 상태 표시 -->
+                    {% for status, letter in entry.matched %}
+                    <span class="letter-box {{ status }}">{{ letter }}</span>
+                    {% endfor %}
+                </li>
+                {% endfor %}
+            </ul>
+        </div>
+        {% endif %}
+    </div>
+    <!-- 글자 입력을 위한 키패드 버튼 -->
+    <div class="keypad">
+        <div class="keypad-row">
+            <button data-letter="q">Q</button>
+            <button data-letter="w">W</button>
+            <button data-letter="e">E</button>
+            <button data-letter="r">R</button>
+            <button data-letter="t">T</button>
+            <button data-letter="y">Y</button>
+            <button data-letter="u">U</button>
+            <button data-letter="i">I</button>
+            <button data-letter="o">O</button>
+            <button data-letter="p">P</button>
+        </div>
+        <div class="keypad-row">
+            <button data-letter="a">A</button>
+            <button data-letter="s">S</button>
+            <button data-letter="d">D</button>
+            <button data-letter="f">F</button>
+            <button data-letter="g">G</button>
+            <button data-letter="h">H</button>
+            <button data-letter="j">J</button>
+            <button data-letter="k">K</button>
+            <button data-letter="l">L</button>
+            <button data-letter="enter">Enter</button>
+        </div>
+        <div class="keypad-row">
+            <button data-letter="z">Z</button>
+            <button data-letter="x">X</button>
+            <button data-letter="c">C</button>
+            <button data-letter="v">V</button>
+            <button data-letter="b">B</button>
+            <button data-letter="n">N</button>
+            <button data-letter="m">M</button>
+            <button data-letter="backspace">⌫</button>
+        </div>
+    </div>
+    </form>
+    <!-- 외부 링크를 포함하는 배너 컨테이너 -->
+    <div class="banner-container">
+        <a href="https://en.dict.naver.com" target="_blank">
+            <img src="/static/images/naver_banner.jpg" alt="Naver Dictionary">
+        </a>
+        <a href="https://www.milkt.co.kr" target="_blank">
+            <img src="/static/images/milkt_banner.jpg" alt="Milkt">
+        </a>
+    </div>
+    <script>
+        // 글자 추가 함수
+        function addLetter(letter) {
+            var input = document.getElementsByName("input_text")[0];
+            if (input.value.length < 5) {
+                input.value += letter;
+            }
+        }
+        // 백스페이스 기능 함수
+        function backspace() {
+    var currentText = document.getElementById('inputField').value;
+    // 현재 텍스트에서 마지막 글자를 삭제
+    var newText = currentText.slice(0, -1);
+    // 입력 필드에 새로운 텍스트 반영
+    document.getElementById('inputField').value = newText;
+}
+        // 모달 창 열고 닫는 함수
+        function toggleModal() {
+            var modal = document.getElementById("myModal");
+            if (modal.style.display === "none" || modal.style.display === "") {
+                modal.style.display = "block"; // 모달 열기
+            } else {
+                modal.style.display = "none"; // 모달 닫기
+            }
+        }
+
+        var currentWordlist = ''; // 현재 선택된 단어 목록을 추적하는 변수
+
+        // 단어 목록 변경 함수
+        function changeWordlist(wordlist) {
+            var xhr = new XMLHttpRequest();
+            xhr.open('POST', '/change-wordlist', true);
+            xhr.setRequestHeader('Content-Type', 'application/json');
+            xhr.onload = function () {
+                if (xhr.status === 200) {
+                    alert('단어 목록이 변경되었습니다.');
+                    // 게임 시작하기 위해 현재 단어 목록 업데이트
+                    currentWordlist = wordlist;
+                    startNewGame();
+                } else {
+                    alert('서버 오류가 발생했습니다.');
+                }
+            };
+            xhr.send(JSON.stringify({ wordlist: wordlist }));
+        }
+
+        var newGameButton = document.querySelector('.new-game-btn');
+
+        // 새 게임 시작 함수
+        function startNewGame() {
+            // 현재 단어 목록을 사용하여 새 게임 시작
+            var xhr = new XMLHttpRequest();
+            xhr.open('POST', '/change-wordlist', true);
+            xhr.setRequestHeader('Content-Type', 'application/json');
+            xhr.onload = function () {
+                if (xhr.status === 200) {
+                    alert('새 게임이 시작되었습니다.');
+                    newGameButton.click()    // 새 게임 버튼 클릭
+                } else {
+                    alert('서버 오류가 발생했습니다.');
+                }
+            };
+            xhr.send(JSON.stringify({ wordlist: currentWordlist }));
+        }
+        document.addEventListener("DOMContentLoaded", function () {
+            const inputField = document.getElementsByName("input_text")[0];
+        
+            // 키패드 상태 초기화
+            const keypadStates = JSON.parse('{{ keypad_states|escapejs }}');
+            // 각 버튼에 초기 상태 적용
+            for (const [letter, state] of Object.entries(keypadStates)) {
+                const button = document.querySelector(`button[data-letter="${letter}"]`);
+                if (button) {
+                    button.classList.add(state);
+                }
+            }
+            // 각 키패드 버튼에 클릭 이벤트 추가
+            document.querySelectorAll(".keypad button").forEach(button => {
+                button.addEventListener("click", () => {
+                    const letter = button.getAttribute('data-letter');
+                    if (letter === "backspace") {
+                        backspace();      // 백스페이스 클릭 시 처리
+                    } else if (letter === "enter") {
+                        if (inputField.value.length > 0) { // 입력 필드가 비어 있지 않은 경우에만 제출
+                            document.forms[1].submit();
+                        }
+                    } else if (inputField.value.length < 5) {
+                        inputField.value += letter;      // 글자 추가
+                    }
+                });
+            });
+        
+            // 백스페이스 버튼 클릭 시 처리
+            document.querySelector('button[data-letter="backspace"]').addEventListener("click", () => {
+                inputField.value = inputField.value.slice(0, -1);
+            });
+            // 제출 버튼 클릭 시 폼 제출
+            document.getElementById("submit").addEventListener("click", () => {
+                document.forms[1].submit();
+            });
+        });
+        
+        // 키패드 버튼 스타일 업데이트
+        function updateKeypadButtonStyle(letter) {
+            const keypadButton = document.getElementById(letter.toLowerCase());
+            if (keypadButton) {
+                keypadButton.style.backgroundColor = "#45A049";
+                keypadButton.style.color = "white";
+            }
+        }
+        // 키패드 버튼 스타일 초기화
+        function resetKeypadButtonStyle() {
+            document.querySelectorAll(".keypad button").forEach(button => {
+                button.style.backgroundColor = "";
+                button.style.color = "";
+            });
+        }
+
+
+
+
+    </script>
+    </div>
+</body>
+
+</html>
