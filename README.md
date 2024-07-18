@@ -22,7 +22,7 @@
 6. python manage.py runserver
 7. http://127.0.0.1:8000/ 링크 접속
 
--> https://chunjae.pythonanywhere.com/ 페이지 생성
+-> https://chunjae.pythonanywhere.com/ 위의 과정들을 거치지 않아도 게임을 진행할 수 있는 페이지
 
 ## How to play Wordle
 1. Rule 버튼을 눌러 규칙을 확인한다.
